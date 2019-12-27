@@ -9,6 +9,6 @@ service:
   - postgresql
 before script:
   - psql -c 'create database banking_api_test;' -U postgres
-  - psql -c "ALTER USER postgres WITH PASSWORD 'masterkey';"
+  - psql -c "ALTER USER postgres WITH PASSWORD 'masterkey';" -U postgres
 script:
   - "mix do deps.get, test --trace && mix compile && mix coveralls.travis"
