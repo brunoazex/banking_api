@@ -3,7 +3,7 @@ use Mix.Config
 # Configure your database
 config :banking_api, BankingApi.Repo,
   username: "postgres",
-  password: "postgres",
+  password: "masterkey",
   database: "banking_api_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,

@@ -10,7 +10,8 @@ defmodule BankingApi.MixProject do
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
-      deps: deps()
+      deps: deps(),
+      test_coverage: [tool: ExCoveralls]
     ]
   end
 
@@ -40,7 +41,13 @@ defmodule BankingApi.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
-      {:plug_cowboy, "~> 2.0"}
+      {:plug_cowboy, "~> 2.0"},
+      {:guardian, "~> 2.0.0"},
+      {:comeonin, "~> 5.1.3"},
+      {:bcrypt_elixir, "~> 2.0.3"},
+      {:excoveralls, "~> 0.12.1", only: :test},
+      {:ex_machina, "~> 2.3.0", only: :test},
+      {:credo, "~> 1.0.5", only: [:dev, :test], runtime: false}
     ]
   end
 

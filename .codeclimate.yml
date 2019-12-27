@@ -1,0 +1,9 @@
+plugins:
+  credo:
+    enabled: true
+    strict: true
+
+ratings:
+  paths:
+    - "**.ex"
+    - "**.exs"
