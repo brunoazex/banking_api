@@ -5,12 +5,8 @@ otp_release:
   - '22.0'
 env:
   - MIX_ENV=test
-addons:
-  postgresql: '10.9'
-
 service:
   - postgresql
-
 before script:
   - psql -c 'create database banking_api_test;' -U postgres
   - psql -c "ALTER USER postgres WITH PASSWORD 'masterkey';"
