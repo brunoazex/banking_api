@@ -1,8 +1,5 @@
 # Banking Api
-
-[![Coverage Status]
-(https://coveralls.io/repos/github/brunoazex/banking_api/badge.svg?
-branch=master)](https://coveralls.io/github/brunoazex/banking_api?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/brunoazex/banking_api/badge.svg?branch=master)](https://coveralls.io/github/brunoazex/banking_api?branch=master)
 
 To start your Phoenix server:
 
