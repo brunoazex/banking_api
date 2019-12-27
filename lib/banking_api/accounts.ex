@@ -69,7 +69,6 @@ defmodule BankingApi.Accounts do
     |> Repo.insert()
   end
 
-
   @doc """
   Returns an `%Ecto.Changeset{}` for tracking account changes.
 
@@ -82,6 +81,5 @@ defmodule BankingApi.Accounts do
   def change_account(%Account{} = account) do
     Account.changeset(account, %{})
   end
-
 
 end

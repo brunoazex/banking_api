@@ -63,7 +63,8 @@ defmodule BankingApi.Accounts.Account do
   end
 
   defp get_next_account_number do
-    value = (from a in Account, select: coalesce(max(a.id), 0)) |> Repo.one()
-    value + 1
+    with value <- (from a in Account, select: coalesce(max(a.id), 0)) |> Repo.one() do
+      value + 1
+    end
   end
 end

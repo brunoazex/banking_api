@@ -43,6 +43,7 @@ defmodule BankingApi.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:guardian, "~> 2.0.0"},
+      {:guardian_db, "~> 2.0"},
       {:comeonin, "~> 5.1.3"},
       {:bcrypt_elixir, "~> 2.0.3"},
       {:excoveralls, "~> 0.12.1", only: :test},

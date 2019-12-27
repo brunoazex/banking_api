@@ -16,6 +16,6 @@ defmodule BankingApiWeb.Router do
 
   scope "/api", BankingApiWeb do
     pipe_through [:api, :authenticated]
-
+    delete "/signout", SessionController, :delete
   end
 end

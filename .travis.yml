@@ -1,0 +1,9 @@
+language: elixir
+elixir:
+  - '1.9.4'
+otp_release:
+  - '22.0'
+env:
+  - MIX_ENV=test
+script:
+  - "mix do depts.get, test --trace && mix compile && mix coveralls.travis"

@@ -3,8 +3,8 @@ defmodule BankingApiWeb.RegistrationController do
   Account registration controller
   """
   use BankingApiWeb, :controller
-  alias BankingApiWeb.Auth.Guardian
   alias BankingApi.Accounts
+  alias BankingApiWeb.Auth.Guardian
 
   action_fallback BankingApiWeb.FallbackController
 

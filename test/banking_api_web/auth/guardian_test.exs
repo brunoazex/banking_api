@@ -1,8 +1,7 @@
 defmodule BankingApi.GuardianTest do
   use BankingApi.DataCase
-  alias BankingApiWeb.Auth.Guardian
   alias BankingApi.Accounts
-
+  alias BankingApiWeb.Auth.Guardian
 
   @account %{name: "Regular user", email: "regular@user.com", document: "000.000.000-00", password: "12345678"}
   def account_fixture(attrs \\ %{}) do
@@ -20,7 +19,7 @@ defmodule BankingApi.GuardianTest do
 
     test "resource from claims" do
       account = account_fixture()
-      {:ok, token, claims } = Guardian.encode_and_sign(account)
+      {:ok, _, claims } = Guardian.encode_and_sign(account)
       assert {:ok, account} = Guardian.resource_from_claims(claims)
     end
   end

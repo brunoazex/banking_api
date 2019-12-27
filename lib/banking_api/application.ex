@@ -11,9 +11,10 @@ defmodule BankingApi.Application do
       # Start the Ecto repository
       BankingApi.Repo,
       # Start the endpoint when the application starts
-      BankingApiWeb.Endpoint
+      BankingApiWeb.Endpoint,
       # Starts a worker by calling: BankingApi.Worker.start_link(arg)
       # {BankingApi.Worker, arg},
+      {Guardian.DB.Token.SweeperServer, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

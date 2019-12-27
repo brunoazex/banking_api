@@ -6,7 +6,7 @@ defmodule BankingApi.AccountsTest do
     alias BankingApi.Accounts.Account
 
     @valid_attrs %{name: "Regular user", email: "regular@user.com", document: "000.000.000-00", password: "some password_hash"}
-    @invalid_attrs %{name: nil, document: nil, email: nil,password: nil}
+    @invalid_attrs %{name: nil, document: nil, email: nil, password: nil}
 
     def account_fixture(attrs \\ %{}) do
       {:ok, account} =
