@@ -5,7 +5,7 @@ defmodule BankingApi.MixProject do
     [
       app: :banking_api,
       version: "0.1.0",
-      elixir: "~> 1.5",
+      elixir: "~> 1.9.4",
       elixirc_paths: elixirc_paths(Mix.env()),
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
@@ -48,7 +48,8 @@ defmodule BankingApi.MixProject do
       {:bcrypt_elixir, "~> 2.0.3"},
       {:excoveralls, "~> 0.12.1", only: :test},
       {:ex_machina, "~> 2.3.0", only: :test},
-      {:credo, "~> 1.0.5", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.0.5", only: [:dev, :test], runtime: false},
+      {:timber, "~> 3.0"}
     ]
   end
 

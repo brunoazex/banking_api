@@ -1,0 +1,8 @@
+{
+  "name": "Banking API",
+  "description": "A simple Banking API built on Elixir/Phoenix",
+  "image": "elixir:latest",
+  "addons": [
+    "heroku-postgresql"
+  ]
+}

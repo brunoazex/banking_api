@@ -1,0 +1,1 @@
+web: ./bin/banking_api start
