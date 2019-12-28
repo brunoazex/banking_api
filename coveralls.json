@@ -9,6 +9,8 @@
         "banking_api.ex",
         "banking_api_web.ex",
         "lib/banking_api_web/endpoint",
+        "release.ex",
+        "releases.exs",
         "priv",
         "test"
     ]

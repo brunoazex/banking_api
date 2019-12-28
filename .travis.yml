@@ -5,8 +5,9 @@ otp_release:
   - '22.0'
 env:
   - MIX_ENV=test
-service:
+services:
   - postgresql
+  - docker
 before script:
   - psql -c 'create database banking_api_test;' -U postgres
   - psql -c "ALTER USER postgres WITH PASSWORD 'masterkey';" -U postgres
