@@ -1,3 +1,5 @@
+# config/test.exs
+
 use Mix.Config
 
 # Configure your database

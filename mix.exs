@@ -11,7 +11,13 @@ defmodule BankingApi.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      test_coverage: [tool: ExCoveralls]
+      test_coverage: [tool: ExCoveralls],
+      source_url: "https://github.com/brunoazex/banking_api",
+      homepage_url: "http://azex-banking-api.herokuapp.com",
+      docs: [
+        main: "Banking APi", # The main page in the docs
+        extras: ["README.md"]
+      ]
     ]
   end
 
@@ -26,7 +32,7 @@ defmodule BankingApi.MixProject do
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "test/support"]
+  defp elixirc_paths(:test), do: ["lib", "test/support", "test/factories"]
   defp elixirc_paths(_), do: ["lib"]
 
   # Specifies your project dependencies.
@@ -43,13 +49,14 @@ defmodule BankingApi.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:guardian, "~> 2.0.0"},
-      {:guardian_db, "~> 2.0"},
       {:comeonin, "~> 5.1.3"},
       {:bcrypt_elixir, "~> 2.0.3"},
       {:excoveralls, "~> 0.12.1", only: :test},
       {:ex_machina, "~> 2.3.0", only: :test},
       {:credo, "~> 1.0.5", only: [:dev, :test], runtime: false},
-      {:timber, "~> 3.0"}
+      {:timber, "~> 3.0"},
+      {:money, "~> 1.6.1"},
+      {:exnumerator, "~> 1.8.0"}
     ]
   end
 

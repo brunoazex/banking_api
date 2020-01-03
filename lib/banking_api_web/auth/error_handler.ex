@@ -1,3 +1,5 @@
+# lib/banking_api_web/auth/error_handler.ex
+
 defmodule BankingApiWeb.Auth.ErrorHandler do
   @moduledoc """
   Error handler catcher

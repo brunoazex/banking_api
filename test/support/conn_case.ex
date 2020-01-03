@@ -1,3 +1,5 @@
+# test/support/conn_case.ex
+
 defmodule BankingApiWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
@@ -14,7 +16,6 @@ defmodule BankingApiWeb.ConnCase do
   by setting `use BankingApiWeb.ConnCase, async: true`, although
   this option is not recommendded for other databases.
   """
-
   use ExUnit.CaseTemplate
 
   using do
@@ -35,6 +36,6 @@ defmodule BankingApiWeb.ConnCase do
       Ecto.Adapters.SQL.Sandbox.mode(BankingApi.Repo, {:shared, self()})
     end
 
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+    {:ok, conn: Phoenix.ConnTest.build_conn() }
   end
 end

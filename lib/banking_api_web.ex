@@ -1,3 +1,5 @@
+# lib/banking_api_web.ex
+
 defmodule BankingApiWeb do
   @moduledoc """
   The entrypoint for defining your web interface, such
@@ -35,7 +37,6 @@ defmodule BankingApiWeb do
 
       # Import convenience functions from controllers
       import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]
-
       import BankingApiWeb.ErrorHelpers
       import BankingApiWeb.Gettext
       alias BankingApiWeb.Router.Helpers, as: Routes

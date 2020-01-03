@@ -1,5 +1,6 @@
-use Mix.Config
+# config/prod.exs
 
+use Mix.Config
 
 config :logger,
   backends: [Timber.LoggerBackends.HTTP, :console],

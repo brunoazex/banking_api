@@ -1,3 +1,5 @@
+# lib/banking_api_web/controllers/registration_controller.ex
+
 defmodule BankingApiWeb.RegistrationController do
   @moduledoc """
   Account registration controller
@@ -8,8 +10,8 @@ defmodule BankingApiWeb.RegistrationController do
 
   action_fallback BankingApiWeb.FallbackController
 
-  def create(conn, %{} = account_params) do
-    with {:ok, account} <- Accounts.create_account(account_params),
+  def create(conn, %{} = signup_params) do
+    with {:ok, account} <- Accounts.signup(signup_params),
     {:ok, token, _claims} <- Guardian.encode_and_sign(account) do
       conn
       |> put_status(:created)

@@ -1,3 +1,5 @@
+# test/banking_api_web/views/error_view_test.exs
+
 defmodule BankingApiWeb.ErrorViewTest do
   use BankingApiWeb.ConnCase, async: true
 

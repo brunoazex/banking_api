@@ -1,85 +1,84 @@
+# lib/banking_api/accounts.ex
+
 defmodule BankingApi.Accounts do
   @moduledoc """
-  The Accounts context.
-  """
+  The Accounts context
 
+  Provides Account's repository operations
+
+  ## Overview
+    - signup/1: To create new accounts on supplied data
+    - get_by_id/1: To retrieve an account by it's `id`
+    - get_by_number/1: To retrieve an account by it's `number`
+  """
   import Ecto.Query, warn: false
-  alias BankingApi.Repo
 
   alias BankingApi.Accounts.Account
+  alias BankingApi.Repo
 
   @doc """
-  Returns the list of account.
+  Tries to signup for a new account
 
-  ## Examples
+  ## Parameters
+   - signup_attrs: A struct that represents required values to complete the signup process
 
-      iex> list_account()
-      [%Account{}, ...]
+  ## Returns
+    - {:ok, account} when signup is accepted, where `account` is the new signed up account
+    - {:error, reason} when signup is not accepted, where `reason` is the reason of not acceptance
+
+  ## Example
+    iex> signup_attrs = %{name: "Normal user", email: "normal@user.com", document: "000.000.000-01", password: "12345678"}
+    iex> Accounts.signup(signup_attrs)
 
   """
-  def list_account do
-    Repo.all(Account)
+  def signup(signup_attrs) do
+    %Account{}
+    |> Account.changeset(signup_attrs)
+    |> Repo.insert()
   end
 
   @doc """
-  Gets a single account.
+  Tries to get an account by the specified `id`
 
-  Raises `Ecto.NoResultsError` if the Account does not exist.
+  ## Parameters
+   - id: A integer that represents the id of the account
 
-  ## Examples
+  ## Returns
+    - {:ok, account} when a account matches the specified `id`, where `account` is the retrieved account
+    - {:error, :not_found} when no account matches the specified `id`
 
-      iex> get_account!(123)
-      %Account{}
-
-      iex> get_account!(456)
-      ** (Ecto.NoResultsError)
+  ## Example
+    iex> Accounts.get_by_id(1)
 
   """
-  def get_account!(id) do
-    Repo.get!(Account, id)
-  end
-
-  @doc """
-  Get a single account from its number
-
-  Returns NotFound (404) if the account does not exist.
-  """
-  def get_account_by_number(number) do
-    case Repo.get_by(Account, number: number) do
+  def get_by_id(id) do
+   case Account
+    |> Repo.get(id)
+    |> Repo.preload([:transactions])
+    do
       nil -> {:error, :not_found}
       account -> {:ok, account}
     end
   end
 
   @doc """
-  Creates a account.
+  Tries to get an account by the specified account `number`
 
-  ## Examples
+  ## Parameters
+   - number: A string that represents the account number with leading zeros
 
-      iex> create_account(%{field: value})
-      {:ok, %Account{}}
+  ## Returns
+    - {:ok, account} when a account matches the specified `number`, where `account` is the retrieved account
+    - {:error, :not_found} when no account matches the specified `number`
 
-      iex> create_account(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
+  ## Example
+    iex> Accounts.get_by_number("00001")
   """
-  def create_account(attrs \\ %{}) do
-    %Account{}
-    |> Account.create_changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking account changes.
-
-  ## Examples
-
-      iex> change_account(account)
-      %Ecto.Changeset{source: %Account{}}
-
-  """
-  def change_account(%Account{} = account) do
-    Account.changeset(account, %{})
+  def get_by_number(number) do
+    case Account |> Repo.get_by(number: number) |> Repo.preload([:transactions]) do
+      nil -> {:error, :not_found}
+      account -> {:ok, account}
+    end
   end
 
 end

@@ -1,3 +1,5 @@
+# lib/banking_api_web/auth/pipeline.ex
+
 defmodule BankingApiWeb.Auth.Pipeline do
   @moduledoc """
   Guardian integration into a pipeline
@@ -9,4 +11,5 @@ defmodule BankingApiWeb.Auth.Pipeline do
   plug Guardian.Plug.VerifyHeader
   plug Guardian.Plug.EnsureAuthenticated
   plug Guardian.Plug.LoadResource
+  plug BankingApiWeb.Auth.CurrentAccount
 end

@@ -1,26 +1,19 @@
-defmodule BankingApiWeb.CustomerControllerTest do
+# test/banking_api_web/controllers/sessions_controller_test.exs
+
+defmodule BankingApiWeb.SessionControllerTest do
   use BankingApiWeb.ConnCase
-  alias BankingApi.Accounts
-  alias BankingApiWeb.Auth.Guardian
 
-  @account_model %{name: "Regular user", email: "regular@user.com", document: "000.000.000-00", password: "12345678"}
+  @account_attrs %{name: "Regular user", email: "regular@user.com", document: "000.000.000-00", password: "12345678"}
   setup do
-    account = account_fixture()
-    {:ok, jwt, full_claims} = Guardian.encode_and_sign(account)
-    {:ok, %{account: account, jwt: jwt, claims: full_claims}}
-  end
-
-  def account_fixture(attrs \\ %{}) do
-    {:ok, account} =
-      attrs
-      |> Enum.into(@account_model)
-      |> Accounts.create_account()
-      %{account | password: nil}
+    conn = build_conn()
+    conn = post(conn, Routes.registration_path(conn, :create), @account_attrs)
+    response = json_response(conn, 201)
+    [logged: response]
   end
 
   describe "signin" do
-    test "renders token when credential is valid",  %{conn: conn, account: account} do
-      conn = post(conn, Routes.session_path(conn, :create), %{"account" => account.number, "password" => "12345678"})
+    test "renders token when credential is valid",  %{conn: conn, logged: logged} do
+      conn = post(conn, Routes.session_path(conn, :create), %{"account" => logged["account"], "password" => "12345678"})
       assert %{"customer" => name} = json_response(conn, 201)
     end
 
@@ -29,20 +22,20 @@ defmodule BankingApiWeb.CustomerControllerTest do
       assert json_response(conn, 404) != %{}
     end
 
-    test "renders error when password is invalid", %{conn: conn, account: account} do
-      conn = post(conn, Routes.session_path(conn, :create), %{"account" => account.number, "password" => "12345678x"})
+    test "renders error when password is invalid", %{conn: conn, logged: logged} do
+      conn = post(conn, Routes.session_path(conn, :create), %{"account" => logged["account"], "password" => "12345678x"})
       assert json_response(conn, 401) != %{}
     end
 
-    test "renders error with wrong parameters", %{conn: conn, account: account} do
-      conn = post(conn, Routes.session_path(conn, :create), %{"accountx" => account.number, "password" => "12345678x"})
+    test "renders error with wrong parameters", %{conn: conn, logged: logged} do
+      conn = post(conn, Routes.session_path(conn, :create), %{"accountx" => logged["account"], "password" => "12345678x"})
       assert json_response(conn, 400) != %{}
     end
   end
 
   describe "signout" do
-    test "with valid token", %{conn: conn, jwt: jwt} do
-      conn = put_req_header(conn, "authorization", "Bearer #{jwt}")
+    test "with valid token", %{conn: conn, logged: logged} do
+      conn = put_req_header(conn, "authorization", "Bearer #{logged["token"]}")
       conn = delete(conn, "/api/signout")
       assert json_response(conn, 200) != %{}
     end

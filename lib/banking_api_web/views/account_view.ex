@@ -1,3 +1,5 @@
+# lib/banking_api_web/views/account_view.ex
+
 defmodule BankingApiWeb.AccountView do
   use BankingApiWeb, :view
 

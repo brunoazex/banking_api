@@ -1,33 +1,30 @@
+# test/banking_api_web/auth/guardian_test.exs
+
 defmodule BankingApi.GuardianTest do
   use BankingApi.DataCase
-  alias BankingApi.Accounts
+
   alias BankingApiWeb.Auth.Guardian
 
-  @account %{name: "Regular user", email: "regular@user.com", document: "000.000.000-00", password: "12345678"}
-  def account_fixture(attrs \\ %{}) do
-    {:ok, account} =
-      attrs
-      |> Enum.into(@account)
-      |> Accounts.create_account()
-      %{account | password: nil}
+  import BankingApi.Test.Factories.Factory
+
+  setup do
+    [persisted: insert(:account)]
   end
+
   describe "token" do
-    test "subject creation" do
-      account = account_fixture()
-      assert  Guardian.subject_for_token(account, nil) == {:ok, to_string(account.id) }
+    test "subject creation", %{persisted: persisted} do
+      assert  Guardian.subject_for_token(persisted, nil) == {:ok, to_string(persisted.id) }
     end
 
-    test "resource from claims" do
-      account = account_fixture()
-      {:ok, _, claims } = Guardian.encode_and_sign(account)
+    test "resource from claims", %{persisted: persisted} do
+      {:ok, _, claims } = Guardian.encode_and_sign(persisted)
       assert {:ok, account} = Guardian.resource_from_claims(claims)
     end
   end
 
   describe "authentication" do
-    test "with valid credential" do
-      account = account_fixture()
-      assert {:ok, account, token} = Guardian.authenticate(account.number, "12345678")
+    test "with valid credential", %{persisted: persisted} do
+      assert {:ok, account, token} = Guardian.authenticate(persisted.number, "12345678")
     end
   end
 end

@@ -1,3 +1,5 @@
+# lib/banking_api.ex
+
 defmodule BankingApi do
   @moduledoc """
   BankingApi keeps the contexts that define your domain

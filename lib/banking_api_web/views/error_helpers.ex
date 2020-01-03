@@ -1,3 +1,5 @@
+# lib/banking_api_web/views/error_helpers.ex
+
 defmodule BankingApiWeb.ErrorHelpers do
   @moduledoc """
   Conveniences for translating and building error messages.

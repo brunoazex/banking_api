@@ -12,4 +12,11 @@ before script:
   - psql -c 'create database banking_api_test;' -U postgres
   - psql -c "ALTER USER postgres WITH PASSWORD 'masterkey';" -U postgres
 script:
-  - "mix do deps.get, test --trace && mix compile && mix coveralls.travis"
+  - "mix do deps.get, test --trace && mix compile && mix coveralls.travis"  
+after_success:  
+  - docker login -u _ -p "$HEROKU_TOKEN"  registry.heroku.com
+  - docker build -t registry.heroku.com/azex-banking-api/web -f Dockerfile .
+  - docker tag back $DOCKER_USER/azex-banking-api:$TRAVIS_BUILD_NUMBER
+  - docker push registry.heroku.com/azex-banking-api/web
+  - docker push $DOCKER_USER/banking-api:latest
+  - heroku run "./bin/banking_api eval 'BankingApi.Release.migrate()'"

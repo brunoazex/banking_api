@@ -1,3 +1,5 @@
+# lib/banking_api_web/controllers/fallback_controller.ex
+
 defmodule BankingApiWeb.FallbackController do
   @moduledoc """
   Translates controller action results into valid `Plug.Conn` responses.
@@ -26,5 +28,4 @@ defmodule BankingApiWeb.FallbackController do
     |> put_view(BankingApiWeb.ErrorView)
     |> render(:"401")
   end
-
 end

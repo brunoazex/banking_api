@@ -1,3 +1,5 @@
+# lib/endpoint.ex
+
 defmodule BankingApiWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :banking_api
 

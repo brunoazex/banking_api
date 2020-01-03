@@ -1,3 +1,5 @@
+# lib/banking_api_web/channels/user_socket.ex
+
 defmodule BankingApiWeb.UserSocket do
   use Phoenix.Socket
 

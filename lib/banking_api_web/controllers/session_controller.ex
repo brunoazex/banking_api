@@ -1,3 +1,5 @@
+# lib/banking_api_web/controllers/session_controller.ex
+
 defmodule BankingApiWeb.SessionController do
   use BankingApiWeb, :controller
 
@@ -22,9 +24,8 @@ defmodule BankingApiWeb.SessionController do
   end
 
   def delete(conn, _) do
-    jwt = Guardian.Plug.current_token(conn)
-    Guardian.revoke(jwt)
     conn
+    |> Guardian.Plug.sign_out()
     |> put_status(200)
     |> put_view(BankingApiWeb.ErrorView)
     |> render(:"200")

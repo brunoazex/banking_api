@@ -1,4 +1,8 @@
 defmodule BankingApi.Release do
+  @moduledoc """
+  Extends migration habilities to be run on a release package
+  """
+
   @app :banking_api
 
   def migrate do

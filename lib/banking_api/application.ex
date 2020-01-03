@@ -1,3 +1,5 @@
+# lib/banking_api/application.ex
+
 defmodule BankingApi.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
@@ -11,10 +13,9 @@ defmodule BankingApi.Application do
       # Start the Ecto repository
       BankingApi.Repo,
       # Start the endpoint when the application starts
-      BankingApiWeb.Endpoint,
+      BankingApiWeb.Endpoint
       # Starts a worker by calling: BankingApi.Worker.start_link(arg)
       # {BankingApi.Worker, arg},
-      {Guardian.DB.Token.SweeperServer, []}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
