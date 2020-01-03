@@ -14,7 +14,7 @@ before script:
 script:
   - "mix do deps.get, test --trace && mix compile && mix coveralls.travis"  
 after_success:  
-  - docker login -u _ -p "$HEROKU_API_TOKEN" registry.heroku.com
+  - docker login -u _ -p "$HEROKU_API_KEY" registry.heroku.com
   - docker build -t registry.heroku.com/azex-banking-api/web -f Dockerfile .
   - docker tag back $DOCKER_USER/azex-banking-api:$TRAVIS_BUILD_NUMBER
   - docker push registry.heroku.com/azex-banking-api/web
