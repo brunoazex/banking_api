@@ -14,6 +14,7 @@ defmodule BankingApiWeb.BankingView do
     %{description: statement.description,
       amount: statement.amount,
       operation: statement.operation,
-      type: statement.type}
+      type: statement.type,
+      date: statement.inserted_at}
   end
 end

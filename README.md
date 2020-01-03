@@ -3,7 +3,7 @@
 [![Build Status](https://travis-ci.com/brunoazex/banking_api.svg?branch=master)](https://travis-ci.com/brunoazex/banking_api)
 [![Coverage Status](https://coveralls.io/repos/github/brunoazex/banking_api/badge.svg?branch=master)](https://coveralls.io/github/brunoazex/banking_api?branch=master)
 
-API Documentation on Swagger: <https://app.swaggerhub.com/apis-docs/brunoazex/banking_api/0.1.0#/signUp>
+API Documentation on Swagger: <https://app.swaggerhub.com/apis-docs/brunoazex/banking_api/1.0.0>
 
 ## Development
 
