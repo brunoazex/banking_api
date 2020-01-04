@@ -20,7 +20,7 @@ To start server:
 * Travis CI Builds are available at <https://travis-ci.com/brunoazex/banking_api>
 * Coveralls tests statics are available at <https://coveralls.io/github/brunoazex/banking_api>
 
-## Steps to make it production ready
+## Steps to make it production
 
 ### Heroku Preparation
 
@@ -82,24 +82,18 @@ to access your Heroku account.
   travis encrypt HEROKU_API_KEY=$(heroku auth:token) --add env.global
 )
 
-#### Add deploy steps to travis.yml
+### Making the Heroku App name known to Travis CI
 
-to get the heroku api key and heroku app name into a env variable:
+You have to SET HEROKU_APP_NAME with heroku app name generated (or renamed) at
+Heroku Preparation step in the Travis repository environment settings.
 
-set the env variable on travis (switch "show it in the log" to off!)
+## Making the app to production
 
-* docker login -u _ -p "$HEROKU_API_KEY" registry.heroku.com
+Simply commit and push to your github repository and then this flow will happen:
 
-* docker build -t registry.heroku.com/$HEROKU_APP_NAME/web -f Dockerfile .
+* Travis will detect the new commit and will build it to specifically run tests
 
-* docker tag back $DOCKER_USER/$HEROKU_APP_NAME:$TRAVIS_BUILD_NUMBER
+* Then tests will be run and get stats sent to Coveralls (getting the cool code coverage badge!)
 
-* docker push registry.heroku.com/$HEROKU_APP_NAME/web
-
-* docker push $DOCKER_USER/$HEROKU_APP_NAME:latest  
-
-* heroku container:release web -a $HEROKU_APP_NAME
-
-* heroku run "./bin/banking_api eval 'BankingApi.Release.migrate()'" -a $HEROKU_APP_NAME
-
-<https://devcenter.heroku.com/articles/local-development-with-docker-compose>
+* After running test successed, Travis will build, deploy, get running the app and 
+the database setup/migration on the brand new container now hosted at Heroku :)
