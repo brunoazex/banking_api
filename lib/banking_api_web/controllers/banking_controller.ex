@@ -4,11 +4,12 @@ defmodule BankingApiWeb.BankingController do
   use BankingApiWeb, :controller
 
   alias BankingApi.Banking
+  alias BankingApiWeb.Auth.Guardian
 
   action_fallback BankingApiWeb.FallbackController
 
   def index(conn, %{"from_date" => from_date, "to_date" => to_date}) do
-    account = conn.assigns.current_account
+    account = Guardian.Plug.current_resource(conn)
     {:ok, statements} = Banking.get_statements(account.number, from_date, to_date)
     conn
     |> put_status(:ok)
@@ -17,7 +18,7 @@ defmodule BankingApiWeb.BankingController do
   end
 
   def withdraw(conn, %{"amount"=> amount}) do
-    account = conn.assigns.current_account
+    account = Guardian.Plug.current_resource(conn)
     case Banking.withdraw(account.number, amount) do
       {:ok, transaction } ->
         conn
@@ -33,7 +34,7 @@ defmodule BankingApiWeb.BankingController do
   end
 
   def transfer(conn, %{"destination"=> destination, "amount"=> amount}) do
-    account = conn.assigns.current_account
+    account = Guardian.Plug.current_resource(conn)
     case Banking.wire_transfer(account.number, destination, amount) do
       {:ok, transaction } ->
         conn

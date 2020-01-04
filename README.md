@@ -69,7 +69,7 @@ After that, the database is available and the configuration is set in an environ
 
 ### Making the Heroku API key known to Travis CI
 
-In order to access heroku, the Heroku API key must be set as HEROKU_TOKEN
+In order to access heroku, the Heroku API key must be set as HEROKU_API_KEY
 environment variable in the travis repository.
 
 One way to do that is to obtain the API key and set is via the Travis web
@@ -77,25 +77,29 @@ interface under "settings". Be sure to switch "Show in log" to off, otherwise
 your key will be included in the log and be public to everyone enabling everyone
 to access your Heroku account.
 
-(note: it should also be possible to set the HEROKU_TOKEN via .travis.yml
-  add HEROKU_TOKEN to .travis.yml
-  travis encrypt HEROKU_TOKEN=$(heroku auth:token) --add env.global
+(note: it should also be possible to set the HEROKU_API_KEY via .travis.yml
+  add HEROKU_API_KEY to .travis.yml
+  travis encrypt HEROKU_API_KEY=$(heroku auth:token) --add env.global
 )
 
 #### Add deploy steps to travis.yml
 
-to get the heroku token into a env variable:
+to get the heroku api key and heroku app name into a env variable:
 
 set the env variable on travis (switch "show it in the log" to off!)
 
-add these steps to travis.yml:(can also be tested locally)
+* docker login -u _ -p "$HEROKU_API_KEY" registry.heroku.com
 
-* docker login -u -p "$HEROKU_TOKEN"  registry.heroku.com
+* docker build -t registry.heroku.com/$HEROKU_APP_NAME/web -f Dockerfile .
 
-* docker build -t registry.heroku.com/notes/web -f Dockerfile.production .
+* docker tag back $DOCKER_USER/$HEROKU_APP_NAME:$TRAVIS_BUILD_NUMBER
 
-* docker push registry.heroku.com/notes/web
-    docker login -u _-p $HEROKU_TOKEN registry.heroku.com
-* heroku run "./bin/banking_api eval 'BankingApi.Release.migrate()'"
+* docker push registry.heroku.com/$HEROKU_APP_NAME/web
+
+* docker push $DOCKER_USER/$HEROKU_APP_NAME:latest  
+
+* heroku container:release web -a $HEROKU_APP_NAME
+
+* heroku run "./bin/banking_api eval 'BankingApi.Release.migrate()'" -a $HEROKU_APP_NAME
 
 <https://devcenter.heroku.com/articles/local-development-with-docker-compose>

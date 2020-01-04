@@ -137,12 +137,9 @@ defmodule BankingApi.Banking do
         from(
           t in Transaction,
           where: t.inserted_at >= ^start_date and t.inserted_at <= ^end_date,
-          select: sum(t.amount)
+          select: coalesce(sum(t.amount), 0)
         )
-     case Repo.one(statements_query) do
-      nil -> 0
-      value -> value
-     end
+    Repo.one(statements_query)
   end
 
   defp convert_start_date(value) do
