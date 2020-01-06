@@ -8,7 +8,7 @@ defmodule BankingApi.Transactions.Transaction do
   import Ecto.Changeset
 
   schema "transactions" do
-    field :amount, :integer
+    field :amount, Money.Ecto.Amount.Type
     field :description, :string
     field :operation, BankingApi.Transactions.OperationType
     field :type, BankingApi.Transactions.TransactionType

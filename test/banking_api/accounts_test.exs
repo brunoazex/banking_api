@@ -32,9 +32,10 @@ defmodule BankingApi.AccountsTest do
         signup_attrs
           |> Accounts.signup()
       assert are_equals(signed_up, signup_attrs)
-      assert signed_up.balance == 1000
+      expected_balance = Money.new(1000_00)
+      assert Money.equals?(signed_up.balance, expected_balance)
       assert signed_up.number != nil
-      assert [%{description: "Signup bonus", amount: 1000}] = signed_up.transactions
+      assert [%{description: "Signup bonus", amount: expected_balance}] = signed_up.transactions
     end
   end
 

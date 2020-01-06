@@ -31,11 +31,16 @@ config :banking_api, BankingApiWeb.Auth.Guardian,
   issuer: "banking_api",
   secret_key: "FSl7Y9pYECiG60WUUAm8SeYsnW2vQCoQXcNvAKvK3bsO/F1iApqnLLbSNd0Jj7eN"
 
-  config :guardian, Guardian.DB,
+config :guardian, Guardian.DB,
   repo: BankingApi.Repo, # Add your repository module
   schema_name: "account_tokens", # default
   token_types: ["refresh_token"], # store all token types if not set
   sweep_interval: 60 # default: 60 minutes
+
+config :money,
+  default_currency: :BRL,
+  separator: ".",
+  delimiter: ","
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

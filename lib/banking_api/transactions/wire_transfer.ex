@@ -42,7 +42,8 @@ defmodule BankingApi.Transactions.WireTransfer do
 
   defp retrieve_accounts(source, destination) do
     fn _repo, _ ->
-      query = from(acc in Account, where: acc.number == ^source or acc.number == ^destination, preload: [:transactions])
+      query = from(acc in Account, where: acc.number == ^source or acc.number == ^destination,
+      preload: [:transactions])
       case  Repo.all(query) do
         [acc_s, acc_d] -> {:ok, {acc_s, acc_d}}
         _ -> {:error, :account_not_found}
@@ -52,14 +53,14 @@ defmodule BankingApi.Transactions.WireTransfer do
 
   defp verify_balances(transfer_amount) do
     fn _repo, %{retrieve_accounts: {source, destination}} ->
-      if source.balance < transfer_amount,
+      if Money.compare(source.balance, transfer_amount) < 0,
         do: {:error, :balance_too_low},
         else: {:ok, {source, destination, transfer_amount}}
     end
   end
 
   defp debt_from_source(repo, %{verify_balances: {source, _, verified_amount}}) do
-    changeset = Account.update_changeset(source, %{balance: source.balance - verified_amount})
+    changeset = Account.update_changeset(source, %{balance: Money.subtract(source.balance,verified_amount)})
     repo.update(changeset)
   end
 
@@ -76,7 +77,7 @@ defmodule BankingApi.Transactions.WireTransfer do
   end
 
   defp credit_to_destination(repo, %{verify_balances: {_, destination, verified_amount}}) do
-    changeset = Account.update_changeset(destination, %{balance: destination.balance + verified_amount})
+    changeset = Account.update_changeset(destination, %{balance: Money.add(destination.balance,verified_amount)})
     repo.update(changeset)
   end
 

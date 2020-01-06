@@ -38,17 +38,7 @@ e.g.
 
 configure SECRET_KEY_BASE:
 
-    heroku config:set SECRET_KEY_BASE=$(mix phx.gen.secret)
-
-#### Timber integration
-
-You can obtain the Timber API Key at Settings > API Keys and
-the Source ID on the Source settings
-
-configure:
-
-    heroku config:set TIMBER_API_KEY=timber api key
-    heroku config:set TIMBER_SOURCE_ID=source id
+    heroku config:set SECRET_KEY_BASE=$(mix phx.gen.secret)  
 
 #### Database for production on Heroku
 
@@ -59,6 +49,15 @@ Tell Heroku to use the postgres add-on:
 After that, the database is available and the configuration is set in an environment variable, you can check it with
 
     heroku config:get DATABASE_URL
+
+Tell Heroku to use the timber.io add-on:
+
+    heroku addons:create timber-logging:free
+
+Then configure TIMBER_API_KEY and TIMBER_SOURCE_ID
+
+    heroku config:set TIMBER_API_KEY=timber api key
+    heroku config:set TIMBER_SOURCE_ID=source id
 
 ## Pushing the image to Heroku
 

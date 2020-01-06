@@ -19,7 +19,7 @@ defmodule BankingApi.Accounts.Account do
     field :password_hash, :string
     field :password, :string, virtual: true
     field :number, :string
-    field :balance, :integer
+    field :balance, Money.Ecto.Amount.Type
     has_many :transactions, BankingApi.Transactions.Transaction, foreign_key: :account_id
     timestamps()
   end
@@ -53,9 +53,15 @@ defmodule BankingApi.Accounts.Account do
   defp put_signup_bonus(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true} ->
+        signup_bonus = Money.new(1000_00)
         changeset
-        |> put_change(:balance, 1000)
-        |> put_assoc(:transactions, [%{description: "Signup bonus", amount: 1000, operation: :credit, type: :deposit}])
+        |> put_change(:balance, signup_bonus)
+        |> put_assoc(:transactions, [%{
+          description: "Signup bonus",
+          amount: signup_bonus,
+          operation: :credit,
+          type: :deposit
+        }])
       _ ->
         changeset
     end

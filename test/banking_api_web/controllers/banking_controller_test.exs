@@ -29,10 +29,10 @@ defmodule BankingApiWeb.BankingControllerTest do
     test "make a withdraw", %{conn: conn, logged: logged} do
       conn = conn
       |> put_req_header("authorization", "Bearer #{logged["token"]}")
-      |> post("/api/withdraw", %{"amount"=> 500})
+      |> post("/api/withdraw", %{"amount"=> "500,00"})
       response = json_response(conn, 200)
       assert response != %{}
-      assert response["amount"] == 500
+      assert response["amount"] == "500,00"
       assert response["type"] == "withdraw"
       assert response["operation"] == "debt"
     end
@@ -40,17 +40,17 @@ defmodule BankingApiWeb.BankingControllerTest do
     test "make a withdraw beyond balance available", %{conn: conn, logged: logged} do
       conn = conn
       |> put_req_header("authorization", "Bearer #{logged["token"]}")
-      |> post("/api/withdraw", %{"amount"=> 1250})
+      |> post("/api/withdraw", %{"amount"=> "1250,00"})
       assert json_response(conn, 405) != %{}
     end
 
     test "make a transfer", %{conn: conn, logged: logged, acc_b: acc_b} do
       conn = conn
       |> put_req_header("authorization", "Bearer #{logged["token"]}")
-      |> post("/api/transfer", %{"destination" => acc_b["account"], "amount"=> 250})
+      |> post("/api/transfer", %{"destination" => acc_b["account"], "amount"=> "250,00"})
       response = json_response(conn, 200)
       assert response != %{}
-      assert response["amount"] == 250
+      assert response["amount"] == "250,00"
       assert response["type"] == "transfer"
       assert response["operation"] == "debt"
     end
@@ -58,7 +58,7 @@ defmodule BankingApiWeb.BankingControllerTest do
     test "make a transfer beyond balance available", %{conn: conn, logged: logged, acc_b: acc_b} do
       conn = conn
       |> put_req_header("authorization", "Bearer #{logged["token"]}")
-      |> post("/api/transfer", %{"destination" => acc_b["account"], "amount"=> 1250})
+      |> post("/api/transfer", %{"destination" => acc_b["account"], "amount"=> "1250,00"})
       assert json_response(conn, 405) != %{}
     end
   end

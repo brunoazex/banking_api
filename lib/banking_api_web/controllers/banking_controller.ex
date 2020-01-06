@@ -10,11 +10,12 @@ defmodule BankingApiWeb.BankingController do
 
   def index(conn, %{"from_date" => from_date, "to_date" => to_date}) do
     account = Guardian.Plug.current_resource(conn)
-    {:ok, statements} = Banking.get_statements(account.number, from_date, to_date)
-    conn
-    |> put_status(:ok)
-    |> put_view(BankingApiWeb.BankingView)
-    |> render("index.json", %{statements: statements, balance: account.balance})
+    with {:ok, statements} <- Banking.get_statements(account.number, from_date, to_date) do
+      conn
+      |> put_status(:ok)
+      |> put_view(BankingApiWeb.BankingView)
+      |> render("index.json", %{statements: statements, balance: account.balance})
+    end
   end
 
   def withdraw(conn, %{"amount"=> amount}) do

@@ -27,7 +27,7 @@ defmodule BankingApi.MixProject do
   def application do
     [
       mod: {BankingApi.Application, []},
-      extra_applications: [:logger, :runtime_tools]
+      extra_applications: [:logger, :runtime_tools, :timex]
     ]
   end
 
@@ -56,7 +56,8 @@ defmodule BankingApi.MixProject do
       {:credo, "~> 1.0.5", only: [:dev, :test], runtime: false},
       {:timber, "~> 3.0"},
       {:money, "~> 1.6.1"},
-      {:exnumerator, "~> 1.8.0"}
+      {:exnumerator, "~> 1.8.0"},
+      {:timex, "~> 3.5"}
     ]
   end
 

@@ -27,10 +27,6 @@ defmodule BankingApiWeb.SessionControllerTest do
       assert json_response(conn, 401) != %{}
     end
 
-    test "renders error with wrong parameters", %{conn: conn, logged: logged} do
-      conn = post(conn, Routes.session_path(conn, :create), %{"accountx" => logged["account"], "password" => "12345678x"})
-      assert json_response(conn, 400) != %{}
-    end
   end
 
   describe "signout" do

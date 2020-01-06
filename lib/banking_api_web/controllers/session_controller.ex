@@ -16,13 +16,6 @@ defmodule BankingApiWeb.SessionController do
     end
   end
 
-  def create(conn, _) do
-    conn
-    |> put_status(:bad_request)
-    |> put_view(BankingApiWeb.ErrorView)
-    |> render(:"400")
-  end
-
   def delete(conn, _) do
     conn
     |> Guardian.Plug.sign_out()
@@ -30,4 +23,5 @@ defmodule BankingApiWeb.SessionController do
     |> put_view(BankingApiWeb.ErrorView)
     |> render(:"200")
   end
+
 end

@@ -23,6 +23,12 @@ defmodule BankingApiWeb.Router do
     get "/statements", BankingController, :index
     post "/withdraw", BankingController, :withdraw
     post "/transfer", BankingController, :transfer
-    get "/backoffice/volume", BackOfficeController, :index
+    scope "/reports" do
+      scope "/amounts" do
+        get "/interval", AmountsController, :by_interval
+        get "/month", AmountsController, :by_month
+        get "/year", AmountsController, :by_year
+      end
+    end
   end
 end

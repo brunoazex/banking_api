@@ -48,14 +48,14 @@ defmodule BankingApi.Transactions.Withdraw do
 
   defp verify_balance(transfer_amount) do
     fn _repo, %{retrieve_account: {source}} ->
-      if source.balance < transfer_amount,
+      if Money.compare(source.balance, transfer_amount) < 0,
         do: {:error, :balance_too_low},
         else: {:ok, {source, transfer_amount}}
     end
   end
 
   defp debt_from_source(repo, %{verify_balance: {source, verified_amount}}) do
-    changeset = Account.update_changeset(source, %{balance: source.balance - verified_amount})
+    changeset = Account.update_changeset(source, %{balance: Money.subtract(source.balance, verified_amount)})
     repo.update(changeset)
   end
 
