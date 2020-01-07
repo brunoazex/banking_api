@@ -4,7 +4,7 @@ defmodule BankingApi.Banking do
   @moduledoc """
   The Banking operations context
 
-  Provides the banking operations
+  Provides a adapter pattern for the banking operations
 
    ## Overview
     - wire_transfer/3: To make a wired transfer between two accounts
@@ -12,11 +12,8 @@ defmodule BankingApi.Banking do
     - get_statements/3: To get the statements in a specified period
   """
 
-  import Ecto.Query, only: [from: 2]
-
-  alias BankingApi.Accounts.Account
   alias BankingApi.Repo
-  alias BankingApi.Transactions.Transaction
+  alias BankingApi.Transactions
   alias BankingApi.Transactions.WireTransfer
   alias BankingApi.Transactions.Withdraw
 
@@ -81,8 +78,8 @@ defmodule BankingApi.Banking do
 
   ## Parameters
    - account_number: A string that represents the account number with leading zeros
-   - from_date: A DateTime that represents the starting date of period
-   - to_date: A DateTime that represents the end date of period
+   - raw_from_date: A string in Date ISO8601 format that represents the starting date of period
+   - raw_to_date: A string in Date ISO8601 format represents the end date of period
 
   ## Returns
     - [ %Transaction{} ] a collection of transactions for the
@@ -91,13 +88,14 @@ defmodule BankingApi.Banking do
   ## Example
     iex> Banking.get_statements("00001", "2020-01-01", "2020-01-01")
   """
-  def get_statements(account_number, from_date, to_date) do
-    with  {:interval, {:ok, start_date, end_date}} <- {:interval, create_interval(from_date, to_date)},
-          {:statements, statements} <- {:statements, get_statements_from_db(account_number, start_date, end_date)}
+  def get_statements(account_number, raw_from_date, raw_to_date) do
+    with {:interval, {:ok, from_date, to_date}} <- {:interval, create_interval(raw_from_date, raw_to_date)},
+         {:report, {:ok, transactions}} <- {:report, Transactions.get_transactions_for(account_number, from_date, to_date)}
     do
-      {:ok, statements }
+      {:ok, transactions}
     else
-      {:interval, {:error, error_reason}} -> {:error, "interval: #{error_reason}"}
+      {:interval, {:error, reason}} -> {:error, "interval: #{reason}"}
+      {:report, {:error, reason}} -> {:error, reason}
     end
   end
 
@@ -105,8 +103,8 @@ defmodule BankingApi.Banking do
   Gets the total transactions amount for a specified period
 
   ## Parameters
-   - from_date: A DateTime that represents the starting date of period
-   - to_date: A DateTime that represents the end date of period
+   - raw_from_date: A string in Date ISO8601 format that represents the starting date of period
+   - raw_to_date: A string in Date ISO8601 format that represents the end date of period
 
   ## Returns
     - {:ok, total_amount } total amount for the period
@@ -115,62 +113,41 @@ defmodule BankingApi.Banking do
   ## Example
     iex> Banking.get_total_amount("2020-01-01", "2020-01-01")
   """
-  def get_total_amount(from_date, to_date) do
-    with  {:interval, {:ok, start_date, end_date}} <- {:interval, create_interval(from_date, to_date)},
-          {:total_amount, total_amount} <- {:total_amount, get_total_amount_for_period(start_date, end_date)}
+  def get_total_amount(raw_from_date, raw_to_date) do
+    with {:interval, {:ok, from_date, to_date}} <- {:interval, create_interval(raw_from_date, raw_to_date)},
+         {:report, {:ok, total_amount}} <- {:report, Transactions.get_total_amount_from_interval(from_date, to_date)}
     do
-      {:ok, total_amount }
+      {:ok, total_amount}
     else
-      {:interval, {:error, error_reason}} -> {:error, "interval: #{error_reason}"}
+      {:interval, {:error, reason}} -> {:error, "interval: #{reason}"}
+      {:report, {:error, reason}} -> {:error, reason}
     end
   end
 
-  defp get_statements_from_db(account_number, start_date, end_date) do
-    statements_query =
-        from(
-          t in Transaction,
-          join: a in Account, on: a.id == t.account_id,
-          where: a.number == ^account_number and t.inserted_at >= ^start_date and t.inserted_at <= ^end_date,
-          order_by: t.inserted_at
-        )
-     Repo.all(statements_query)
-  end
-
-  defp get_total_amount_for_period(start_date, end_date) do
-    transactions_query =
-        from(
-          t in Transaction,
-          where: t.inserted_at >= ^start_date and t.inserted_at <= ^end_date,
-          order_by: t.inserted_at
-        )
-    Repo.all(transactions_query)
-    |> Enum.reduce(Money.new(0), fn %{amount: amount}, acc -> Money.add(acc, amount) end)
-  end
-
-  defp create_interval(from_date, to_date) do
-    with {:start_date, {:ok, start_date}} <- {:start_date, convert_start_date(from_date)},
-         {:end_date, {:ok, end_date}} <- {:end_date, convert_end_date(to_date)}
+  defp create_interval(raw_from_date, raw_to_date) do
+    with {:from_date, {:ok, from_date}} <- {:from_date, build_from_date(raw_from_date)},
+         {:to_date, {:ok, to_date}} <- {:to_date, build_to_date(raw_to_date)}
     do
-      if Date.diff(end_date, start_date) < 0 do
-        {:error, "start_date can not be greater than to_date"}
+      if Date.diff(to_date, from_date) < 0 do
+        {:error, "to_date must be greater than from_date"}
       else
-        {:ok, start_date, end_date}
+        {:ok, from_date, to_date}
       end
     else
-      {:start_date, {:error, error_reason}} -> {:error, "from_date: #{error_reason}"}
-      {:end_date, {:error, error_reason}} -> {:error, "to_date: #{error_reason}"}
+      {:from_date, {:error, error_reason}} -> {:error, "from_date: #{error_reason}"}
+      {:to_date, {:error, error_reason}} -> {:error, "to_date: #{error_reason}"}
     end
   end
 
-  defp convert_start_date(value) do
-    case Date.from_iso8601(value) do
+  defp build_from_date(raw_value) do
+    case Date.from_iso8601(raw_value) do
       {:ok, date} ->  NaiveDateTime.new(date, ~T[00:00:00])
       {:error, reason} -> {:error, reason}
     end
   end
 
-  def convert_end_date(value) do
-    case Date.from_iso8601(value) do
+  def build_to_date(raw_value) do
+    case Date.from_iso8601(raw_value) do
       {:ok, date} ->  NaiveDateTime.new(date, ~T[23:59:59])
       {:error, reason} -> {:error, reason}
     end
@@ -178,18 +155,18 @@ defmodule BankingApi.Banking do
 
   defp to_money(value) do
     value
-    |> amount_as_money()
+    |> as_money()
     |> validate_amount()
   end
 
-  defp amount_as_money(value) when is_bitstring(value) do
+  defp as_money(value) when is_bitstring(value) do
     case Money.parse(value) do
       {:ok, money} -> money
       :error -> {:error, "Invalid amount format"}
     end
   end
 
-  defp amount_as_money(value) do
+  defp as_money(value) do
     Money.new(value)
   end
 

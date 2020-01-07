@@ -18,3 +18,6 @@ config :banking_api, BankingApiWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :banking_api, BankingApi.Mailer,
+  adapter: Bamboo.TestAdapter

@@ -50,14 +50,22 @@ After that, the database is available and the configuration is set in an environ
 
     heroku config:get DATABASE_URL
 
+#### Timber integration
+
 Tell Heroku to use the timber.io add-on:
 
     heroku addons:create timber-logging:free
 
 Then configure TIMBER_API_KEY and TIMBER_SOURCE_ID
 
-    heroku config:set TIMBER_API_KEY=timber api key
-    heroku config:set TIMBER_SOURCE_ID=source id
+    heroku config:set TIMBER_API_KEY=<replace with your timber api key>
+    heroku config:set TIMBER_SOURCE_ID=<replace with your timber source id>
+
+#### Send email notifications with SendGrid integration
+
+Configure SENDGRID_API_KEY
+
+    heroku config:set SENDGRID_API_KEY=<replace with your sendgrid api key>
 
 ## Pushing the image to Heroku
 

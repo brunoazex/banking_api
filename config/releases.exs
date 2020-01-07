@@ -31,3 +31,6 @@ config :timber,
        api_key: System.get_env("TIMBER_API_KEY"),
        source_id: System.get_env("TIMBER_SOURCE_ID")
 
+config :banking_api, BankingApi.Mailer,
+       adapter: Bamboo.SendGridAdapter,
+       api_key: System.get_env("SENDGRID_API_KEY")

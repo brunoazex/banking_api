@@ -8,6 +8,8 @@ defmodule BankingApi.Transactions.Withdraw do
   import Ecto.Query, only: [from: 2]
 
   alias BankingApi.Accounts.Account
+  alias BankingApi.EmailNotifications
+  alias BankingApi.Mailer
   alias BankingApi.Repo
   alias Ecto.Multi
 
@@ -16,6 +18,7 @@ defmodule BankingApi.Transactions.Withdraw do
   First retrieving the account by it's number
   Then verify if account has suficient balance
   Then debt the specified amount from the source account
+  And Finally sends a e-mail notification for source account
 
   ## Parameters
     - source: Account number who will make the witdraw
@@ -34,6 +37,7 @@ defmodule BankingApi.Transactions.Withdraw do
     |> Multi.run(:verify_balance, verify_balance(amount))
     |> Multi.run(:debt_from_source, &debt_from_source/2)
     |> Multi.run(:register_debt_transaction, &register_debt_transaction/2)
+    |> Multi.run(:send_notification_to_source, &send_notification_to_source/2)
   end
 
   defp retrieve_account(source) do
@@ -69,5 +73,11 @@ defmodule BankingApi.Transactions.Withdraw do
       }
     )
     repo.insert(changeset)
+  end
+
+  defp send_notification_to_source(_, %{verify_balance: {source, verified_amount}}) do
+    notification = EmailNotifications.withdraw(source, verified_amount)
+    Mailer.deliver_later(notification)
+    {:ok, {source, verified_amount}}
   end
 end
