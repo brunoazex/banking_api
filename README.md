@@ -34,11 +34,12 @@ To prepare the Heroku app:
 e.g.
     heroku rename azex-banking-api
 
-#### Secret key base for production
+#### Secret key base for app and guardian production
 
-configure SECRET_KEY_BASE:
+configure SECRET_KEY_BASE and SECRET_GUARDIAN_KEY:
 
     heroku config:set SECRET_KEY_BASE=$(mix phx.gen.secret)  
+    heroku config:set SECRET_KEY_BASE=$(mix guardian.gen.secret) 
 
 #### Database for production on Heroku
 

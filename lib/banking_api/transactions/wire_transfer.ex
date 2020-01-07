@@ -60,7 +60,7 @@ defmodule BankingApi.Transactions.WireTransfer do
   end
 
   defp debt_from_source(repo, %{verify_balances: {source, _, verified_amount}}) do
-    changeset = Account.update_changeset(source, %{balance: Money.subtract(source.balance,verified_amount)})
+    changeset = Account.update_changeset(source, %{balance: Money.subtract(source.balance, verified_amount)})
     repo.update(changeset)
   end
 
@@ -77,7 +77,7 @@ defmodule BankingApi.Transactions.WireTransfer do
   end
 
   defp credit_to_destination(repo, %{verify_balances: {_, destination, verified_amount}}) do
-    changeset = Account.update_changeset(destination, %{balance: Money.add(destination.balance,verified_amount)})
+    changeset = Account.update_changeset(destination, %{balance: Money.add(destination.balance, verified_amount)})
     repo.update(changeset)
   end
 

@@ -30,8 +30,9 @@ defmodule BankingApi.Transactions do
           where: t.inserted_at >= ^from_date and t.inserted_at <= ^to_date,
           order_by: t.inserted_at
         )
-    total = Repo.all(transactions_query)
-    |> Enum.reduce(Money.new(0), fn %{amount: amount}, acc -> Money.add(acc, amount) end)
+    transactions = Repo.all(transactions_query)
+    total = transactions
+            |> Enum.reduce(Money.new(0), fn %{amount: amount}, acc -> Money.add(acc, amount) end)
     {:ok, total}
   end
 

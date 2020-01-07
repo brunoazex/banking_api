@@ -44,7 +44,11 @@ defmodule BankingApiWeb.AmountsController do
 
   defp create_month_period(month, year) do
     with {:ok, base_date} <- Date.new(year, month, 1) do
-      {:ok, base_date |> Timex.format!("{ISOdate}"), Timex.end_of_month(base_date) |> Timex.format!("{ISOdate}")}
+      start_date = Timex.format!(base_date, "{ISOdate}")
+      end_date = base_date
+                 |> Timex.end_of_month()
+                 |> Timex.format!("{ISOdate}")
+      {:ok, start_date, end_date }
     else
       {:error, reason} -> {:error, reason}
     end
@@ -52,7 +56,11 @@ defmodule BankingApiWeb.AmountsController do
 
   defp create_year_period(year) do
     with {:ok, base_date} <- Date.new(year, 1, 1) do
-      {:ok, base_date |> Timex.format!("{ISOdate}"), Timex.end_of_year(base_date) |> Timex.format!("{ISOdate}")}
+      start_date = Timex.format!(base_date, "{ISOdate}")
+      end_date = base_date
+                 |> Timex.end_of_year()
+                 |> Timex.format!("{ISOdate}")
+      {:ok, start_date, end_date }
     else
       {:error, reason} -> {:error, reason}
     end

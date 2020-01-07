@@ -90,7 +90,8 @@ defmodule BankingApi.Banking do
   """
   def get_statements(account_number, raw_from_date, raw_to_date) do
     with {:interval, {:ok, from_date, to_date}} <- {:interval, create_interval(raw_from_date, raw_to_date)},
-         {:report, {:ok, transactions}} <- {:report, Transactions.get_transactions_for(account_number, from_date, to_date)}
+         {:report, {:ok, transactions}} <-
+          {:report, Transactions.get_transactions_for(account_number, from_date, to_date)}
     do
       {:ok, transactions}
     else
