@@ -42,26 +42,32 @@ defmodule BankingApiWeb.AmountsController do
     end
   end
 
-  defp create_month_period(month, year) do
-    with {:ok, base_date} <- Date.new(year, month, 1) do
+  def create_month_period(month, year) do
+    with {:month, {month_int, _}} <- {:month, Integer.parse(month)},
+         {:year, {year_int, _}} <- {:year, Integer.parse(year)},
+         {:ok, base_date} <- Date.new(year_int, month_int, 1) do
       start_date = Timex.format!(base_date, "{ISOdate}")
       end_date = base_date
                  |> Timex.end_of_month()
                  |> Timex.format!("{ISOdate}")
       {:ok, start_date, end_date }
     else
+      {:month, :error} -> {:error, "Month: invalid value"}
+      {:year, :error} -> {:error, "Year: invalid value"}
       {:error, reason} -> {:error, reason}
     end
   end
 
   defp create_year_period(year) do
-    with {:ok, base_date} <- Date.new(year, 1, 1) do
+    with {:year, {year_int, _}} <- {:year, Integer.parse(year)},
+         {:ok, base_date} <- Date.new(year_int, 1, 1) do
       start_date = Timex.format!(base_date, "{ISOdate}")
       end_date = base_date
                  |> Timex.end_of_year()
                  |> Timex.format!("{ISOdate}")
       {:ok, start_date, end_date }
     else
+      {:year, :error} -> {:error, "Year: invalid value"}
       {:error, reason} -> {:error, reason}
     end
   end

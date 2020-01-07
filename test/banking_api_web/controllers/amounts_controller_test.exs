@@ -43,35 +43,35 @@ defmodule BankingApiWeb.AmountsControllerTest do
     test "get by month", %{conn: conn, logged: logged} do
       conn = conn
       |> put_req_header("authorization", "Bearer #{logged["token"]}")
-      |> get("/api/reports/amounts/month", %{"month"=> 1, "year" => 2020})
+      |> get("/api/reports/amounts/month", %{"month"=> "1", "year" => "2020"})
       assert json_response(conn, 200) != %{}
     end
 
     test "get by month with invalid month", %{conn: conn, logged: logged} do
       conn = conn
       |> put_req_header("authorization", "Bearer #{logged["token"]}")
-      |> get("/api/reports/amounts/month", %{"month"=> 13, "year" => 2020})
+      |> get("/api/reports/amounts/month", %{"month"=> "13", "year" => "2020"})
       assert json_response(conn, 422) != %{}
     end
 
     test "get by month with invalid year", %{conn: conn, logged: logged} do
       conn = conn
       |> put_req_header("authorization", "Bearer #{logged["token"]}")
-      |> get("/api/reports/amounts/month", %{"month"=> 1, "year" => 20201})
+      |> get("/api/reports/amounts/month", %{"month"=> "1", "year" => "20201"})
       assert json_response(conn, 422) != %{}
     end
 
     test "get by year", %{conn: conn, logged: logged} do
       conn = conn
       |> put_req_header("authorization", "Bearer #{logged["token"]}")
-      |> get("/api/reports/amounts/year", %{"year"=> 2020})
+      |> get("/api/reports/amounts/year", %{"year"=> "2020"})
       assert json_response(conn, 200) != %{}
     end
 
     test "get by year with invalid year", %{conn: conn, logged: logged} do
       conn = conn
       |> put_req_header("authorization", "Bearer #{logged["token"]}")
-      |> get("/api/reports/amounts/year", %{"year"=> 20201})
+      |> get("/api/reports/amounts/year", %{"year"=> "20201"})
       assert json_response(conn, 422) != %{}
     end
   end

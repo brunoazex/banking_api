@@ -147,7 +147,7 @@ defmodule BankingApi.Banking do
     end
   end
 
-  def build_to_date(raw_value) do
+  defp build_to_date(raw_value) do
     case Date.from_iso8601(raw_value) do
       {:ok, date} ->  NaiveDateTime.new(date, ~T[23:59:59])
       {:error, reason} -> {:error, reason}
