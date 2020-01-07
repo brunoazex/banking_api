@@ -39,4 +39,4 @@ config :banking_api, BankingApi.Mailer,
 
 config :banking_api, BankingApiWeb.Auth.Guardian,
   issuer: "banking_api",
-  secret_key: System.get_env("SECRET_GUARDIAN_KEY")
+  secret_key: System.get_env("GUARDIAN_SECRET_KEY")

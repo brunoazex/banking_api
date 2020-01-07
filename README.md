@@ -39,7 +39,7 @@ e.g.
 configure SECRET_KEY_BASE and SECRET_GUARDIAN_KEY:
 
     heroku config:set SECRET_KEY_BASE=$(mix phx.gen.secret)  
-    heroku config:set SECRET_KEY_BASE=$(mix guardian.gen.secret) 
+    heroku config:set SECRET_GUARDIAN_KEY=$(mix guardian.gen.secret) 
 
 #### Database for production on Heroku
 
