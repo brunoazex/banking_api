@@ -21,7 +21,9 @@ config :banking_api, BankingApiWeb.Endpoint,
   url: [scheme: "https", host: "azex-banking-api.herokuapp.com", port: 443],
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   server: true,
-  secret_key_base: secret_key_base
+  secret_key_base: secret_key_base,
+  render_errors: [view: BankingApiWeb.ErrorView, accepts: ~w(json)],
+  pubsub: [name: BankingApi.PubSub, adapter: Phoenix.PubSub.PG2]
 
 config :logger,
        backends: [Timber.LoggerBackends.HTTP, :console],
@@ -34,3 +36,7 @@ config :timber,
 config :banking_api, BankingApi.Mailer,
        adapter: Bamboo.SendGridAdapter,
        api_key: System.get_env("SENDGRID_API_KEY")
+
+config :banking_api, BankingApiWeb.Auth.Guardian,
+  issuer: "banking_api",
+  secret_key: secret_key_base

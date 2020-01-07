@@ -57,3 +57,10 @@ config :phoenix, :stacktrace_depth, 20
 
 # Initialize plugs at runtime for faster development compilation
 config :phoenix, :plug_init_mode, :runtime
+
+# Configures the endpoint
+config :banking_api, BankingApiWeb.Endpoint,
+  url: [host: "localhost"],
+  secret_key_base: "FSl7Y9pYECiG60WUUAm8SeYsnW2vQCoQXcNvAKvK3bsO/F1iApqnLLbSNd0Jj7eN",
+  render_errors: [view: BankingApiWeb.ErrorView, accepts: ~w(json)],
+  pubsub: [name: BankingApi.PubSub, adapter: Phoenix.PubSub.PG2]
