@@ -103,7 +103,7 @@ defmodule BankingApi.BankingTest do
         %{
           description: "OK",
           account: account,
-          amount: Money.new(10),
+          amount: Money.new(100_00),
           operation: :debt,
           type: :withdraw})
     end

@@ -40,13 +40,22 @@ defmodule BankingApi.Transactions.WireTransfer do
     |> Multi.run(:register_credit_transaction, &register_credit_transaction/2)
   end
 
+  defp retrieve_account(number) do
+    query = from(acc in Account, where: acc.number == ^number, preload: [:transactions])
+    case Repo.all(query) do
+      [account] -> {:ok, account}
+      _ -> {:error, :account_not_found}
+    end
+  end
+
   defp retrieve_accounts(source, destination) do
     fn _repo, _ ->
-      query = from(acc in Account, where: acc.number == ^source or acc.number == ^destination,
-      preload: [:transactions])
-      case  Repo.all(query) do
-        [acc_s, acc_d] -> {:ok, {acc_s, acc_d}}
-        _ -> {:error, :account_not_found}
+      with {:ok, acc_s} <- retrieve_account(source),
+           {:ok, acc_d} <- retrieve_account(destination)
+      do
+        {:ok, {acc_s, acc_d}}
+      else
+        {_, _} -> {:error, :account_not_found}
       end
     end
   end
