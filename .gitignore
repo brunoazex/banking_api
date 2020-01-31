@@ -28,4 +28,4 @@ banking_api-*.tar
 /priv/static/
 
 # Less is more
-/.elixir_ls/
+.elixir_ls/

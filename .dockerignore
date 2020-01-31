@@ -3,3 +3,4 @@ _build
 deps
 assets/node_modules
 test
+.elixir_ls/
